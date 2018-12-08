@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const hngel = new Discord.Client();
 
 const ytdl = require('ytdl-core');
 const request = require('request');
@@ -8,11 +8,14 @@ const getYoutubeID = require('get-youtube-id');
 const fetchVideoInfo = require('youtube-info');
 
 const yt_api_key = "AIzaSyDeoIH0u1e72AtfpwSKKOSy3IPp2UHzqi4";
-const prefix = '*';
-client.login(process.env.BOT_TOKEN);
+const prefix = '*';         //by : mr hngrl
 
-client.on('ready', function() {
-    console.log(`i am ready ${client.user.username}`);
+  const discord_token = process.env.BOT_TOKEN;
+hngel.login(discord_token);
+
+
+hngel.on('ready', function() {
+    console.log(`i am ready by:mr 3tbb${hngel.user.username}`);
    
          //by : mr hngrl
 
@@ -22,7 +25,8 @@ client.on('ready', function() {
 
 
 
-    
+             //by : mr hngrl
+
     
 /*
 ////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -46,7 +50,7 @@ var now_playing = [];
 \\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
 \\\\\\\\\\\\\\\\\\\\\\\\V/////////////////////////
 */
-client.on('ready', () => {});
+hngel.on('ready', () => {});
 var download = function(uri, filename, callback) {
     request.head(uri, function(err, res, body) {
         console.log('content-type:', res.headers['content-type']);
@@ -56,7 +60,7 @@ var download = function(uri, filename, callback) {
     });
 };
 
-client.on('message', function(message) {
+hngel.on('message', function(message) {
     const member = message.member;
     const mess = message.content.toLowerCase();
     const args = message.content.split(' ').slice(1).join(' ');
@@ -66,27 +70,25 @@ client.on('message', function(message) {
         // if user is not insert the URL or song title
         if (args.length == 0) {
             let play_info = new Discord.RichEmbed()
-                .setAuthor(client.user.username, client.user.avatarURL)
+                .setAuthor(hngel.user.username, hngel.user.avatarURL)
                 .setFooter('طلب بواسطة: ' + message.author.tag)
                 .setDescription('**قم بإدراج رابط او اسم الأغنيه**')
-                       .setColor("#c9688d")
+            
+            
+            
             message.channel.sendEmbed(play_info)
-            return;
+return;
         }
         if (queue.length > 0 || isPlaying) {
             getID(args, function(id) {
                 add_to_queue(id);
                 fetchVideoInfo(id, function(err, videoInfo) {
                     if (err) throw new Error(err);
-                    let play_info = new Discord.RichEmbed()
-                        .setAuthor(client.user.username, client.user.avatarURL)
-                        .addField('تمت إضافةالاغنيه بقائمة الإنتظار', `**
-                          ${videoInfo.title}
-                          **`)
-                        .setColor("#c9688d")
-                        .setFooter('|| ' + message.author.tag)
-                        .setThumbnail(videoInfo.thumbnailUrl)
-                    message.channel.sendEmbed(play_info);
+                  
+                  message.channel.send("``تم اضافة الأغنيه الى قائمة الانتظار :``")
+                    message.channel.send(`(**${videoInfo.title}**)`)
+                  
+                  
                     queueNames.push(videoInfo.title);
                     now_playing.push(videoInfo.title);
 
@@ -101,19 +103,12 @@ client.on('message', function(message) {
                 playMusic(id, message);
                 fetchVideoInfo(id, function(err, videoInfo) {
                     if (err) throw new Error(err);
-                    let play_info = new Discord.RichEmbed()
-                        .setAuthor(client.user.username, client.user.avatarURL)
-                        .addField('__**تم التشغيل ✨**__', `**${videoInfo.title}
-                              **`)
-                        .setColor("#c9688d")
-                        .addField(`بواسطه`, message.author.username)
-                        .setThumbnail(videoInfo.thumbnailUrl)
+                  
+                 
+                    message.channel.send("``:تم تشغيل``")
+                    message.channel.send(`(**${videoInfo.title}**)`)
 
-                    // .setDescription('?')
-                    message.channel.sendEmbed(play_info)
-                    message.channel.send(`
-                            **${videoInfo.title}** تم تشغيل `)
-                    // client.user.setGame(videoInfo.title,'https://www.twitch.tv/Abdulmohsen');
+                    // hngel.user.setGame(videoInfo.title,'https://www.twitch.tv/hngel2667');
                 });
             });
         }
@@ -123,7 +118,8 @@ client.on('message', function(message) {
         message.channel.send('`✔`').then(() => {
             skip_song(message);
             var server = server = servers[message.guild.id];
-            if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();
+            if (message.guild.voiceConnection) message.guild.voiceConnection.disconnect();         //by : mr hngrl
+
         });
     }
     else if (message.content.startsWith(prefix + 'vol')) {
@@ -156,21 +152,20 @@ client.on('message', function(message) {
         if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
         message.member.voiceChannel.join().then(message.channel.send(':ok:'));
     }
-    else if (mess.startsWith(prefix + 'play')) {
-        if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
-        if (isPlaying == false) return message.channel.send(':anger: || **__تم التوقيف__**');
-        let playing_now_info = new Discord.RichEmbed()
-            .setAuthor(client.user.username, client.user.avatarURL)
-            .addField('تمت إضافةالاغنيه بقائمة الإنتظار', `**
-                  ${videoInfo.title}
-                  **`)
-            .setColor("#c9688d")
-            .setFooter('طلب بواسطة: ' + message.author.tag)
-            .setThumbnail(videoInfo.thumbnailUrl)
-        //.setDescription('?')
-        message.channel.sendEmbed(playing_now_info);
+        else if (mess.startsWith(prefix + 'play')) {
+        if (!message.member.voiceChannel) return
+ message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
+
+        if (isPlaying == false) return 
+message.channel.send(':anger: || **__تم التوقيف__**');
+
+   
+                  message.channel.send("``تم اضافة الأغنيه الى قائمة الانتظار :``")
+                    message.channel.send(`(**${videoInfo.title}**)`)
+                  
     }
 });
+
 
 function skip_song(message) {
     if (!message.member.voiceChannel) return message.channel.send(':no_entry: || **__يجب ان تكون في روم صوتي__**');
@@ -179,6 +174,7 @@ function skip_song(message) {
 
 function playMusic(id, message) {
     voiceChannel = message.member.voiceChannel;
+         //by : mr hngrl
 
 
     voiceChannel.join().then(function(connectoin) {
@@ -235,29 +231,29 @@ function search_video(query, cb) {
     });
 }///////////////////////////////////////////////
 
+         //by : mr hngrl
 
 const adminprefix = "*";  
-const devs = ['513787884449431572','372063259051950091'];  
-client.on('message', message => {  
+const devs = ['513787884449431572','372063259051950091'];
+hngel.on('message', message => {  
   var argresult = message.content.split(` `).slice(1).join(' ');  
     if (!devs.includes(message.author.id)) return;  
-//if(!message.member.hasPermission('ADMINISTRATOR')) return 
     
 if (message.content.startsWith(adminprefix + 'setgame')) {  
-  client.user.setGame(argresult);
+  hngel.user.setGame(argresult);
     message.channel.sendMessage(`**${argresult} تم تغيير بلاينق البوت إلى **`)
 } else 
   if (message.content.startsWith(adminprefix + 'setname')) {
-client.user.setUsername(argresult).then
+hngel.user.setUsername(argresult).then
     message.channel.sendMessage(`**${argresult}** : تم تغيير أسم البوت إلى`)
 return message.reply("**لا يمكنك تغيير الاسم يجب عليك الانتظآر لمدة ساعتين . **");
 } else
   if (message.content.startsWith(adminprefix + 'setavatar')) {
-client.user.setAvatar(argresult);
+hngel.user.setAvatar(argresult);
   message.channel.sendMessage(`**${argresult}** : تم تغير صورة البوت`);
       } else     
 if (message.content.startsWith(adminprefix + 'setT')) {
-  client.user.setGame(argresult, "https://www.twitch.tv/idk");
+  hngel.user.setGame(argresult, "https://www.twitch.tv/hngel2667");
     message.channel.sendMessage(`**تم تغيير تويتش البوت إلى  ${argresult}**`)
 }
 
@@ -268,44 +264,33 @@ if (message.content.startsWith(adminprefix + 'setT')) {
 function isYoutube(str) {
     return str.toLowerCase().indexOf('youtube.com') > -1;
 }
+ hngel.on('message', message => {
+     if (message.content === prefix +"help") {
+    const embed = new Discord.RichEmbed()
+     .setColor("#9a21df")
+     .addField(`**__أوامر البوت__**`,`
 
+      **${prefix}come**:♪عشان يدخل البوت الروم
 
-client.on("message", message => {
+      **${prefix}play**:♪امر تشغيل الأغنية , !شغل الرابط او اسم الأغنية
 
- if (message.content === prefix +"help") {  
-const embed = new Discord.RichEmbed()   
-  .setThumbnail(message.author.avatarURL) 
-      .setColor("#c9688d")  
-      .setDescription(`
-╔═╦═╦╦╦══╦══╦═╗
-║║║║║║║══╬║║╣╔╝
-║║║║║║╠══╠║║╣╚╗
-╚╩═╩╩═╩══╩══╩═╝
-═════════════════════
-${prefix}play
-لتشغيل أغنية برآبط أو بأسم
-${prefix}skip
-لتجآوز الأغنية الحآلية
-${prefix}pause
-إيقآف الأغنية مؤقتا
-${prefix}resume
-لموآصلة الإغنية بعد إيقآفهآ مؤقتا
-${prefix}vol
-لتغيير درجة الصوت 100 - 0
-${prefix}stop
-لإخرآج البوت من الروم
-${prefix}come
-دخول البوت
-════════**ADMIN**══════
-${prefix}${prefix}setgame══✨لتغيير حاله البوت
-${prefix}${prefix}setname══✨لتغيير اسم البوت
-${prefix}${prefix}setavatar✨لتغيير صوره البوت
-${prefix}${prefix}setT═════✨لتغيير تويتش البوت
-══════════════════════
-BOT:Ayosh.#6000 |✨
- `)  
-  
-   message.channel.sendEmbed(embed)  
-    
-   }
-   }); 
+      **${prefix}skip**:♪تغير الأغنية
+
+      **${prefix}stop**:♪ايقاف الأغنية
+
+      **${prefix}pause**:♪ايقاف الأغنية مؤقت
+
+      **${prefix}on**♪مواصلة الأغنية
+
+      **${prefix}vol**:♪1-200 :مستوئ الصوت 
+
+     prefix = ${prefix}
+     ping = ${Date.now() - message.createdTimestamp}ms
+      `)
+
+      message.channel.send({embed});
+     }
+    });
+         //by : mr hngrl
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
